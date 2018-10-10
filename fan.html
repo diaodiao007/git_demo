@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        #fan1,
+        #f3 {
+            width: 200px;
+            margin: 20px auto;
+        }
+
+        #fan2 {
+            width: 200px;
+            margin: 20px auto;
+        }
+
+        .shake {
+            display: block;
+            width: 50px;
+            margin: 10px auto;
+        }
+
+        .circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 5px solid #ccc;
+            border-top-color: red;
+            border-right-color: green;
+            border-bottom-color: blue;
+            border-left-color: purple;
+        }
+
+        .circle-myrotate1 {
+            animation: myrotate1 1.5s infinite linear;
+            ;
+        }
+
+        .circle-myrotate2 {
+            animation: myrotate2 1s infinite linear;
+            ;
+        }
+
+        .circle-myrotate3 {
+            animation: myrotate3 .5s infinite linear;
+        }
+
+        @keyframes myrotate1 {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes myrotate2 {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes myrotate3 {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .controller,
+        .switch {
+            width: 100px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .gear {
+            display: block;
+            margin: 20px auto;
+        }
+
+        .on-off {
+            margin: 0 10px;
+        }
+
+        .active {
+            background: green;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="fan1"></div>
+    <div id="fan2"></div>
+    <div id="fan3"></div>
+
+    <script src="jquery.js"></script>
+
+    <script>
+
+        /**
+        什么是私有方法/对外暴露方法？
+        什么是面向对象？
+        什么是封装？
+        什么是属性？
+        什么是构造函数？
+
+        函数式编程/组合式编程
+        **/
+
+        function Fan(brand, selector) {
+            this.gear = 0;
+            this.brand = brand;
+            this.status = 'off';
+            this.shakeStatus = 'off';
+            this.selector = selector;
+            this.$container = $(selector);
+
+            this._init();
+        }
+
+        Fan.prototype._init = function () {
+            var self = this;
+            // var $circle = $();
+            this.$container.append('<button class="shake">摇头</button>');
+            this.$container.append('<div class="circle"></div>');
+            this.$container.append('<div class="controller">  <button class="gear gear-3">3</button><button class="gear gear-2">2</button><button class="gear gear-1">1</button><button class="gear gear-0">0</button>   </div>')
+            this.$container.append('<div class="switch"><button class="on-off">开/关</button></div>')
+
+            this.$container.find('.on-off').click(function () {
+                if (self.status == 'on') {
+                    self.off();
+                } else {
+                    self.on();
+                }
+            });
+
+            this.$container.find('.gear').click(function () {
+                var gear = $(this).text();
+                self.shift(gear);
+            });
+        }
+
+        Fan.prototype.on = function (range) {
+            this.status = 'on';
+            this.$container.find('.on-off').addClass('active');
+
+            if (this.gear != 0) {
+                this._shiftRotate();
+            }
+        }
+
+        Fan.prototype._shiftRotate = function () {
+            this._stopRotage();
+            this.$container.find('.circle').addClass('circle-myrotate' + this.gear);
+        }
+
+        Fan.prototype._stopRotage = function () {
+            this.$container.find('.circle').removeClass('circle-myrotate1');
+            this.$container.find('.circle').removeClass('circle-myrotate2');
+            this.$container.find('.circle').removeClass('circle-myrotate3');
+        }
+
+        Fan.prototype.off = function () {
+            this.status = 'off';
+            this.$container.find('.on-off').removeClass('active');
+            this._stopRotage();
+        }
+
+        Fan.prototype.shakeStart = function () {
+            this.shakeStatus = 'on'
+        }
+
+        Fan.prototype.shakeStop = function () {
+            this.shakeStatus = 'off'
+        }
+
+        Fan.prototype.shift = function (gear) {
+            this.gear = gear;
+            this.$container.find('.gear').removeClass('active');
+            if (gear != 0) {
+                this.$container.find('.gear-' + gear).addClass('active');
+
+                if (this.status == 'on') {
+                    this._shiftRotate();
+                }1
+            } else {
+                this._stopRotage();
+            }
+        }
+
+
+
+
+        var f = new Fan('钻石', '#fan1');
+        var f2 = new Fan('钻石', '#fan2');
+        var f3 = new Fan('钻石', '#fan3');
+     
+
+
+    </script>
+</body>
+
+</html>
